@@ -1,0 +1,10 @@
+{
+    "1": {
+        "name": "Maria",
+        "availability": "Monday"
+    },
+    "2": {
+        "name": "Carly",
+        "availability": "Tuesday"
+    }
+}
