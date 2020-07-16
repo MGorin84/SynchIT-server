@@ -1,4 +1,4 @@
-const { getAllUsers, getUserById} = require("../utils/users_utils")
+const { getAllUsers, getUserById, addUser, deleteUser, updateUser } = require("../utils/users_utils")
 
 //get all users
 function getUsers(req,res) {
@@ -15,5 +15,44 @@ function getUser(req,res) {
     res.send(req.error)
 }
 
+//add a user
+function makeUser(req,res){
+    const newUser = addUser(req)
+    if (newUser) {
+        res.status(201)
+        res.send(newUser)
+    }else{
+        res.status(500)
+        res.send(req.error)
+    }
+}
 
-module.exports = {getUsers, getUser}
+//remove user
+function removeUser(req,res) {
+
+    let users = deleteUser(req)
+    if(req.error) {
+        res.status(req.status)
+        res.send(req.error)
+    }
+    else {
+        res.send(users)
+    }
+
+}
+
+//update user
+function changeUser(req, res) {
+    let updatedUser = updateUser(req)
+    if(req.error) {
+        res.status(req.status)
+        res.send(req.error)
+    }
+    else {
+        res.send(updatedUser)
+    }
+}
+
+
+
+module.exports = {getUsers, getUser, makeUser, removeUser, changeUser}

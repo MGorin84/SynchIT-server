@@ -1,10 +1,12 @@
 const expect = require("expect")
 const testDataFile = "./data/users.test.json"
 const fs = require("fs")
-const {loadData, getAllUsers, getUserById} = require("../utils/users_utils")
+const {loadData, getAllUsers, getUserById, addUser, deleteUser, updateUser} = require("../utils/users_utils")
+
 
 beforeEach(() => {
-    setUpData()
+	console.log("setting up data")
+	setUpData()
 })
 
 describe("SetUpData", ()=> {
@@ -43,6 +45,60 @@ describe("getUserById", () => {
         req.params.id = "2"
         getUserById(req)
         expect(req.error).toBe("User not found")
+    })
+})
+
+describe("addUser", () => {
+    let req = {
+        body: {
+            name: "Princess",
+            availability: "Wednesday"
+        }
+        
+    }
+    it("should create a valid user and update a test data file", () => {
+        addUser(req)
+        let contents = fs.readFileSync(testDataFile, 'utf8')
+        let users = JSON.parse(contents)
+        expect(Object.keys(users).length).toBe(2)
+    })
+    it("should return updated user", () => {
+        let newUser = addUser(req)
+        expect(newUser.name).toBe(req.body.name)
+    })
+})
+
+describe("deleteUser", () => {
+    let req = {
+        params: {
+            id: "1"
+        }
+    }
+    it("should remove user", () => {
+        let users = deleteUser(req)
+        expect(Object.keys(users).length).toBe(0)
+    })
+    it("should update the file to remove user", () => {
+        deleteUser(req)
+        let contents = fs.readFileSync(testDataFile, 'utf8')
+        let users = JSON.parse(contents)
+        expect(Object.keys(users).length).toBe(0)
+    })
+})
+
+describe("updateUser", () => {
+    let req = {
+        params: {
+            id: "1"
+        },
+        body: {
+            name: "User 1",
+            availability: "Friday"
+        }
+    }
+    it("should update user", () => {
+        let user = updateUser(req)
+        expect(user.availability).toBe("Friday")
     })
 })
 
