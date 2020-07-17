@@ -1,116 +1,86 @@
 const expect = require("expect")
-const testDataFile = "./data/users.test.json"
-const fs = require("fs")
+const mongoose = require("mongoose")
+const User = require("../models/user")
 const {loadData, getAllUsers, getUserById, addUser, deleteUser, updateUser} = require("../utils/users_utils")
 
+const dbConn = "mongodb://localhost/SynchIT_test"
+let userId = null
 
-beforeEach(() => {
-	console.log("setting up data")
-	setUpData()
-})
+//hook to use with asynchronous functions 
+before (done => connectToDb(done))
 
-describe("SetUpData", ()=> {
-    it("should populate test file with data", () => {
-        let contents = fs.readFileSync(testDataFile, 'utf8')
-        expect(contents.length).toBeGreaterThan(3)
-        let users = JSON.parse(contents)
-        expect(users["1"].name).toBe("User 1")
-    })
-})
-
-describe("getAllUsers", () => {
-    it("should return i user from the test data", () => {
-        let users = getAllUsers({})
-        expect(Object.keys(users).length).toBe(1)
-        expect(users["1"].name).toBe("User 1")
-    })
-})
-
-describe("getUserById", () => {
-    let req = {
-        params: {
-            id: "1"
-        }
-    }
-    it("should return user by id", () => {
-        let req = {
-            params: {
-                id: "1"
+//connect to test db
+function connectToDb(done) {
+    mongoose.connect(
+        dbConn,
+        {
+          useNewUrlParser: true,
+          useUnifiedTopology: true,
+          useFindAndModify: false  
+        },
+        error => {// error handling
+            if (error) {
+                console.log("Error connecting to a database", error)
+                done()
+            }else{
+                console.log("Connected to the database")
+                done()
             }
         }
-        let user = getUserById(req)
-        expect(user.name).toBe("User 1")
-    })
-    it("should set req.error if invalid id", () => {
-        req.params.id = "2"
-        getUserById(req)
-        expect(req.error).toBe("User not found")
-    })
-})
+    )
+};
 
-describe("addUser", () => {
-    let req = {
-        body: {
-            name: "Princess",
-            availability: "Wednesday"
-        }
-        
-    }
-    it("should create a valid user and update a test data file", () => {
-        addUser(req)
-        let contents = fs.readFileSync(testDataFile, 'utf8')
-        let users = JSON.parse(contents)
-        expect(Object.keys(users).length).toBe(2)
-    })
-    it("should return updated user", () => {
-        let newUser = addUser(req)
-        expect(newUser.name).toBe(req.body.name)
-    })
-})
+// disconnect from test DB when all tests are done
+after (done => {
+    mongoose.disconnect(() => done())
+});
 
-describe("deleteUser", () => {
-    let req = {
-        params: {
-            id: "1"
-        }
-    }
-    it("should remove user", () => {
-        let users = deleteUser(req)
-        expect(Object.keys(users).length).toBe(0)
-    })
-    it("should update the file to remove user", () => {
-        deleteUser(req)
-        let contents = fs.readFileSync(testDataFile, 'utf8')
-        let users = JSON.parse(contents)
-        expect(Object.keys(users).length).toBe(0)
-    })
-})
-
-describe("updateUser", () => {
-    let req = {
-        params: {
-            id: "1"
-        },
-        body: {
-            name: "User 1",
-            availability: "Friday"
-        }
-    }
-    it("should update user", () => {
-        let user = updateUser(req)
-        expect(user.availability).toBe("Friday")
-    })
-})
+//setting up test data before each test
+beforeEach(async function (){
+    //load a test record set up
+    //use await so we can access user id used for testing
+    let user = await setUpData()
+    userId = user._id
+});
 
 function setUpData() {
-    let testUserData = {}
-    let testUser = {}
-    let date = Date.now()
-    testUser.name = "User 1"
-    testUser.availability = "Monday"
-    testUser.create_date = date
-    testUser.modified_date = date
-    testUserData["1"] = testUser
-    fs.writeFileSync(testDataFile, JSON.stringify(testUserData))
-    loadData(testDataFile)
-}
+    let testUser = {};
+    testUser.name = "Tester"
+    testUser.role = "Testing manager"
+    testUser.availability = "Monday";
+    return User.create(testUser)
+};
+
+
+// deleting test data after tests
+afterEach(done => {
+    tearDownData().exec(() => done())
+});
+
+function tearDownData(){
+    return User.deleteMany()
+};
+
+describe("getAllUsers", () => {
+    it("should get a user", async function (){
+        let req = {
+            query:{}
+            
+        };
+        await getAllUsers(req).exec((error, users) => {
+           expect(Object.keys(users).length).toBe(1) 
+        })
+    })
+    it("should get a user with a username Tester", async function(){
+        let req = {
+            query:{}
+            
+        };
+        await getAllUsers(req).exec((error, users) => {
+            expect(users[0].name).toBe("Tester")
+             
+         });
+    });
+});
+
+

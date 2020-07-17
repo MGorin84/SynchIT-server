@@ -1,58 +1,74 @@
 const { getAllUsers, getUserById, addUser, deleteUser, updateUser } = require("../utils/users_utils")
 
 //get all users
-function getUsers(req,res) {
-    res.send(getAllUsers(req))
-
-}
+const getUsers = function (req,res) {
+    getAllUsers(req)
+        .exec((error, users) => {
+            if(error){
+                res.status(500)
+                return res.json({
+                    error: error.message
+                })
+            }
+        res.send(users);
+    });
+};
 
 //get user by id
-function getUser(req,res) {
-    let user = getUserById(req)
-    if(user) res.send(user)
-    // if user id is not valid
-    res.status(404)
-    res.send(req.error)
-}
+const getUser = function(req,res) {
+    //executes query from getUserById
+    getUserById(req).exec((error, user) => {
+        if (error) {
+          res.status(404);
+          return res.send("User not found");
+        }
+        res.send(user);
+      });
+};
 
 //add a user
-function makeUser(req,res){
-    const newUser = addUser(req)
-    if (newUser) {
-        res.status(201)
-        res.send(newUser)
-    }else{
-        res.status(500)
-        res.send(req.error)
-    }
-}
+const makeUser = function(req,res){
+    //save user instance from adUser
+    addUser(req).save((error, user) => {
+        if (error) {
+          res.status(500);
+          return res.json({
+            error: error.message
+          });
+        }
+        res.status(201);
+        res.send(user);
+      });
+};
 
 //remove user
-function removeUser(req,res) {
+const removeUser = function(req,res) {
+    // execute the query from deleteUser
+    deleteUser(req.params.id).exec((error) => {
+        if (error) {
+        res.status(500);
+        return res.json({
+            error: error.message
+        });
+        }
+        res.sendStatus(204);
 
-    let users = deleteUser(req)
-    if(req.error) {
-        res.status(req.status)
-        res.send(req.error)
-    }
-    else {
-        res.send(users)
-    }
-
-}
+    });
+};
 
 //update user
-function changeUser(req, res) {
-    let updatedUser = updateUser(req)
-    if(req.error) {
-        res.status(req.status)
-        res.send(req.error)
+const changeUser = function(req, res) {
+    // execute the query from updateUser
+  updateUser(req).exec((error, user) => {
+    if (error) {
+      res.status(500);
+      return res.json({
+        error: error.message
+      });
     }
-    else {
-        res.send(updatedUser)
-    }
-}
-
-
+    res.status(200);
+    res.send(user);
+  });
+};
 
 module.exports = {getUsers, getUser, makeUser, removeUser, changeUser}
