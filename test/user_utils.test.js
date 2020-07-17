@@ -1,0 +1,86 @@
+const expect = require("expect")
+const mongoose = require("mongoose")
+const User = require("../models/user")
+const {loadData, getAllUsers, getUserById, addUser, deleteUser, updateUser} = require("../utils/users_utils")
+
+const dbConn = "mongodb://localhost/SynchIT_test"
+let userId = null
+
+//hook to use with asynchronous functions 
+before (done => connectToDb(done))
+
+//connect to test db
+function connectToDb(done) {
+    mongoose.connect(
+        dbConn,
+        {
+          useNewUrlParser: true,
+          useUnifiedTopology: true,
+          useFindAndModify: false  
+        },
+        error => {// error handling
+            if (error) {
+                console.log("Error connecting to a database", error)
+                done()
+            }else{
+                console.log("Connected to the database")
+                done()
+            }
+        }
+    )
+};
+
+// disconnect from test DB when all tests are done
+after (done => {
+    mongoose.disconnect(() => done())
+});
+
+//setting up test data before each test
+beforeEach(async function (){
+    //load a test record set up
+    //use await so we can access user id used for testing
+    let user = await setUpData()
+    userId = user._id
+});
+
+function setUpData() {
+    let testUser = {};
+    testUser.name = "Tester"
+    testUser.role = "Testing manager"
+    testUser.availability = "Monday";
+    return User.create(testUser)
+};
+
+
+// deleting test data after tests
+afterEach(done => {
+    tearDownData().exec(() => done())
+});
+
+function tearDownData(){
+    return User.deleteMany()
+};
+
+describe("getAllUsers", () => {
+    it("should get a user", async function (){
+        let req = {
+            query:{}
+            
+        };
+        await getAllUsers(req).exec((error, users) => {
+           expect(Object.keys(users).length).toBe(1) 
+        })
+    })
+    it("should get a user with a username Tester", async function(){
+        let req = {
+            query:{}
+            
+        };
+        await getAllUsers(req).exec((error, users) => {
+            expect(users[0].name).toBe("Tester")
+             
+         });
+    });
+});
+
+
