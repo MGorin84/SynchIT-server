@@ -68,7 +68,7 @@ app.use(passport.session());
 app.get('/', (req, res) => {
     console.log("get on /");
     req.session.timesVisited ?
-        req.session.timesVisited++ : req.session.timesVisited = 1;
+    req.session.timesVisited++ : req.session.timesVisited = 1;
     res.send(`You have visited ${req.session.timesVisited} times!`);
 }) 
 
