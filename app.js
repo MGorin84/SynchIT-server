@@ -66,11 +66,19 @@ app.use(passport.session());
 
 // Define a simple route for GET
 app.get('/', (req, res) => {
+<<<<<<< HEAD
     console.log("get on /");
     req.session.timesVisited ?
-    req.session.timesVisited++ : req.session.timesVisited = 1;
+        req.session.timesVisited++ : req.session.timesVisited = 1;
     res.send(`You have visited ${req.session.timesVisited} times!`);
 }) 
+=======
+    console.log('get on /');
+    console.log('req.session', req.session)
+    console.log('req.user', req.user)
+    res.send('got your request');
+})
+>>>>>>> cc1cf750353ba0a6fff3bae3a8e47213c52783f7
 
 // use the user router for all requests on users
 app.use('/users', userRouter);
