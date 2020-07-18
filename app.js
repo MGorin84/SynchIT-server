@@ -1,9 +1,13 @@
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
-const mongoose = require("mongoose")
-const MongoStore = require("connect-mongo")(session)
-const userRouter = require("./routes/users_routes")
+const cookieParser = require('cookie-parser');
+const passport = require("passport");
+const session = require("express-session");
+const mongoose = require("mongoose");
+const MongoStore = require("connect-mongo")(session);
+const authRouter = require("./routes/auth_routes");
+const userRouter = require("./routes/users_routes");
 
 // set port if deploying to external provider 
 // or port assigned already
@@ -14,10 +18,12 @@ const app = express();
 // call the middleware
 app.use(cors());
 app.use(bodyParser.json());
+app.use(cookieParser());
+
 
 //
 if(process.env.NODE_ENV !== 'production') {
-    require('dotenv').config();
+     require('dotenv').config();
 }
 
 
@@ -41,39 +47,34 @@ mongoose.connect(
     }
 )
 
-// Define a simple route for GET
-app.get("/",(req,res) => {
-    res.send("Welcome to SynchIT server!")
-});
-
-// 
-
-// use the user router for all requests on users
-app.use('/users', userRouter);
-
-// Use cors
-const whitelist = ['https://admiring-dijkstra-36720e.netlify.app/']
-app.use(cors({
-    credentials: true,
-    origin: function (origin,callback) {
-        // Check each url in whitelist and see if it includes the origin (instead of matching exact string)
-        const whitelistIndex = whitelist.findIndex((url) => url.includes(origin))
-        console.log("found whitelistIndex", whitelistIndex)
-        callback(null,whitelistIndex > -1)
-    }
-}));
 app.use(session({
-    // resave and saveUninitialized set to false for deprecation warnings
+    //resave and saveUninitialized set to false for deprecation warnings
     secret: "Express is awesome",
     resave: false,
     saveUninitialized: false,
     cookie: {
         maxAge: 1800000
-    },
+   },
     store: new MongoStore({
         mongooseConnection: mongoose.connection
     })
 }));
+
+require('./config/passport');
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Define a simple route for GET
+app.get('/', (req, res) => {
+    console.log("get on /");
+    req.session.timesVisited ?
+        req.session.timesVisited++ : req.session.timesVisited = 1;
+    res.send(`You have visited ${req.session.timesVisited} times!`);
+}) 
+
+// use the user router for all requests on users
+app.use('/users', userRouter);
+app.use("/auth", authRouter)
 
 // Listen
 app.listen(port, () => console.log(`Listening on port ${port}.`));
