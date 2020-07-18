@@ -4,7 +4,6 @@ const User = require("../models/user")
 const register = function (req, res) {
     User.register(new User({
         username: req.body.username,
-        name: req.body.name,
         email: req.body.email
     }), req.body.password, function (err) {
         if (err) {
@@ -14,18 +13,33 @@ const register = function (req, res) {
             })
         } else {
             // Log in the newly registered user
-            passport.authenticate('local')(req, res, function () {
-				// See what we have
-                console.log('authenticated', req.user.username)
-                console.log('session object:', req.session)
-                console.log('req.user:', req.user)
-				// send back the user
-                res.json(req.user)
-            })
+            loginUser(req, res)
         }
     })
 }
 
+const authenticate = passport.authenticate("local")
+// helper function
+
+function loginUser(req, res) {
+    // passport.authenticate returns a function that we will call with req, res, and a callback function to execute on success    
+
+    authenticate(req, res, function () {
+        console.log("authenticated", req.user.username)
+        console.log("session object:", req.session)
+        console.log("req.user:", req.user)
+        res.json(req.user)
+    })
+}
+
+const logout = function(req, res) {
+	req.logout()
+	console.log("logged out user")
+	console.log("session object:", req.session)
+	console.log("req.user:", req.user)
+	res.sendStatus(200)
+}
 
 
-module.exports = { register }
+
+module.exports = { register, login: loginUser, logout }
