@@ -1,0 +1,5 @@
+{ "name": "Maria", "role": "Director", "availability": "Monday, Tuesday"}
+{ "name": "Sonya", "role": "Assistant", "availability": "Wednesday"}
+{ "name": "Leo", "role": "Manager", "availability": "Friday"}
+{ "name": "Princess", "role": "Reception", "availability": "Everyday"}
+{ "name": "Rocky", "role": "HR", "availability": "Thursday"}

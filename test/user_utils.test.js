@@ -1,7 +1,8 @@
 const expect = require("expect")
 const mongoose = require("mongoose")
+const utilities = require('../utils/users_utils');
 const User = require("../models/user")
-const {loadData, getAllUsers, getUserById, addUser, deleteUser, updateUser} = require("../utils/users_utils")
+
 
 const dbConn = "mongodb://localhost/SynchIT_test"
 let userId = null
@@ -62,12 +63,12 @@ function tearDownData(){
 };
 
 describe("getAllUsers", () => {
-    it("should get a user", async function (){
+    it("should get all users", async function (){
         let req = {
             query:{}
             
         };
-        await getAllUsers(req).exec((error, users) => {
+        await utilities.getAllUsers(req).exec((error, users) => {
            expect(Object.keys(users).length).toBe(1) 
         })
     })
@@ -76,7 +77,7 @@ describe("getAllUsers", () => {
             query:{}
             
         };
-        await getAllUsers(req).exec((error, users) => {
+        await utilities.getAllUsers(req).exec((error, users) => {
             expect(users[0].name).toBe("Tester")
              
          });
@@ -84,3 +85,64 @@ describe("getAllUsers", () => {
 });
 
 
+// get user by id
+describe("getUserById", () => {
+    it("username of first user should be Tester", async function () {
+        // Set up req with user Id
+        let req = {
+            params: {
+                id: userId
+            }
+        }
+        await utilities.getUserById(req).exec((error, user) => {
+            expect(user.name).toBe("Tester");
+        });
+    });
+});
+
+// add user
+describe("addUser", () => {
+    it('should add a user', async function () {
+        // define a req object with expected structure
+        const req = {
+            body: {
+                name: "Janel",
+                role: "Mentor",
+                availability: "Saturday"
+            }
+        }
+        await utilities.addUser(req).save((error, user) => {
+            expect(user.name).toBe(req.body.name);
+        });
+    });
+});
+
+// delete user
+describe("deleteUser", () => {
+    it("should delete the user bu id", async function () {
+        await utilities.deleteUser(userId).exec();
+        await User.findById(userId).exec((error, user) => {
+            expect(user).toBe(null);
+        });
+    });
+});
+
+// update user
+describe("updateUser", () => {
+    it("should update a user", async function () {
+        // set up a req object
+        const req = {
+            params: {
+                id: userId
+            },
+            body: {
+                name: "Tester 2",
+                role: "tester",
+                availability: "Tuesday"
+            }
+        };
+        await utilities.updateUser(req).exec((error, user) => {
+            expect(user.name).toBe(req.body.name);
+        });
+    });
+});
