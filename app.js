@@ -11,7 +11,7 @@ const userRouter = require("./routes/users_routes");
 
 // set port if deploying to external provider 
 // or port assigned already
-const port = process.env.port || 3030;
+const port = process.env.PORT || 3030;
 
 // create server
 const app = express();

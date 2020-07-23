@@ -1,5 +1,5 @@
-{ "name": "Maria", "role": "Director", "availability": "Monday, Tuesday"}
-{ "name": "Sonya", "role": "Assistant", "availability": "Wednesday"}
-{ "name": "Leo", "role": "Manager", "availability": "Friday"}
-{ "name": "Princess", "role": "Reception", "availability": "Everyday"}
-{ "name": "Rocky", "role": "HR", "availability": "Thursday"}
+{ "email": "maria@test.com", "name": "Maria", "role": "Director", "availability": "Monday, Tuesday"}
+{ "email": "sonya@test.com", "name": "Sonya", "role": "Assistant", "availability": "Wednesday"}
+{ "email": "leo@test.com", "name": "Leo", "role": "Manager", "availability": "Friday"}
+{ "email": "princess@test.com", "name": "Princess", "role": "Reception", "availability": "Everyday"}
+{ "email": "rocky@test.com", "name": "Rocky", "role": "HR", "availability": "Thursday"}
