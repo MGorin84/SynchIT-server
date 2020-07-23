@@ -13,14 +13,10 @@ const getUserById = function (req) {
     return User.findById(req.params.id)
   }
 
-//
-const addUser = function (req) {
-    return new User(req.body)
-}
 
 //delete user
-const deleteUser = function(id) {
-    return User.findByIdAndRemove(id)
+const deleteUser = function(req) {
+    return User.findByIdAndRemove(req.params.id)
 }
 
 const updateUser = function(req) {
@@ -30,4 +26,4 @@ const updateUser = function(req) {
 }
 
 
-module.exports = {getAllUsers, getUserById, addUser, deleteUser, updateUser}
+module.exports = {getAllUsers, getUserById, deleteUser, updateUser}
