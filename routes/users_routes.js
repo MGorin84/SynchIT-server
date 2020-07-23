@@ -11,15 +11,13 @@ router.get("/", getUsers)
 router.get("/:id",userAuthenticated, getUser)
 
 //POST on /users
-router.post("/",userAuthenticated, makeUser)
+router.post("/", userAuthenticated, verifyOwner, makeUser)
 
-//delete users
-router.delete("/:id",userAuthenticated,verifyOwner,removeUser )
+//delete user
+router.delete("/:id", userAuthenticated, verifyOwner, removeUser )
 
 //update user
-router.put("/:id",userAuthenticated,verifyOwner,changeUser)
-
-router.patch("/:id",userAuthenticated,verifyOwner,changeUser)
+router.patch("/:id", userAuthenticated, verifyOwner, changeUser)
 
 // export the router
 module.exports = router
