@@ -46,9 +46,10 @@ beforeEach(async function (){
 
 function setUpData() {
     let testUser = {};
-    testUser.name = "Tester"
-    testUser.role = "Testing manager"
-    testUser.availability = "Monday";
+    testUser.username = "Tester"
+    testUser.email = "tester@test.com"
+    testUser.position = "Testing manager"
+    testUser.availability = [{"day":"Monday", "time_of_day":"afternoon"}];
     return User.create(testUser)
 };
 
@@ -78,7 +79,7 @@ describe("getAllUsers", () => {
             
         };
         await utilities.getAllUsers(req).exec((error, users) => {
-            expect(users[0].name).toBe("Tester")
+            expect(users[0].username).toBe("Tester")
              
          });
     });
@@ -95,32 +96,20 @@ describe("getUserById", () => {
             }
         }
         await utilities.getUserById(req).exec((error, user) => {
-            expect(user.name).toBe("Tester");
-        });
-    });
-});
-
-// add user
-describe("addUser", () => {
-    it('should add a user', async function () {
-        // define a req object with expected structure
-        const req = {
-            body: {
-                name: "Janel",
-                role: "Mentor",
-                availability: "Saturday"
-            }
-        }
-        await utilities.addUser(req).save((error, user) => {
-            expect(user.name).toBe(req.body.name);
+            expect(user.username).toBe("Tester");
         });
     });
 });
 
 // delete user
 describe("deleteUser", () => {
-    it("should delete the user bu id", async function () {
-        await utilities.deleteUser(userId).exec();
+    it("should delete the user by id", async function () {
+        let req = {
+            params: {
+                id: userId
+            }
+        }
+        await utilities.deleteUser(req).exec();
         await User.findById(userId).exec((error, user) => {
             expect(user).toBe(null);
         });
@@ -136,13 +125,14 @@ describe("updateUser", () => {
                 id: userId
             },
             body: {
-                name: "Tester 2",
-                role: "tester",
-                availability: "Tuesday"
+                username: "Tester 2",
+                email: "tester@test.com",
+                position: "tester",
+                availability: [{"day":"Tuesday", "time_of_day": "evening"}]
             }
         };
         await utilities.updateUser(req).exec((error, user) => {
-            expect(user.name).toBe(req.body.name);
+            expect(user.username).toBe(req.body.username);
         });
     });
 });

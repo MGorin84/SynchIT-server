@@ -1,5 +1,5 @@
-{ "email": "maria@test.com", "name": "Maria", "position": "Director", "availability": [{"day":"Monday", "time_of_day": "afternoon"}]}
-{ "email": "sonya@test.com", "name": "Sonya", "position": "Assistant", "availability":  [{"day":"Tuesday", "time_of_day": "afternoon"}]}
-{ "email": "leo@test.com", "name": "Leo", "position": "Manager", "availability":  [{"day":"Wednesday", "time_of_day": "afternoon"}]}
-{ "email": "princess@test.com", "name": "Princess", "position": "Reception", "availability":  [{"day":"Thursday", "time_of_day": "afternoon"}]}
-{ "email": "rocky@test.com", "name": "Rocky", "position": "HR", "availability":  [{"day":"Friday", "time_of_day": "afternoon"}]}
+{ "email": "maria@test.com", "username": "Maria", "position": "Director", "availability": [{"day":"Monday", "time_of_day": "afternoon"}]}
+{ "email": "sonya@test.com", "username": "Sonya", "position": "Assistant", "availability":  [{"day":"Tuesday", "time_of_day": "afternoon"}]}
+{ "email": "leo@test.com", "username": "Leo", "position": "Manager", "availability":  [{"day":"Wednesday", "time_of_day": "afternoon"}]}
+{ "email": "princess@test.com", "username": "Princess", "position": "Reception", "availability":  [{"day":"Thursday", "time_of_day": "afternoon"}]}
+{ "email": "rocky@test.com", "username": "Rocky", "position": "HR", "availability":  [{"day":"Friday", "time_of_day": "afternoon"}]}

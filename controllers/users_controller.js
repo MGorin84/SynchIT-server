@@ -1,4 +1,4 @@
-const { getAllUsers, getUserById, addUser, deleteUser, updateUser } = require("../utils/users_utils")
+const { getAllUsers, getUserById, deleteUser, updateUser } = require("../utils/users_utils")
 
 //authenticate user
 const userAuthenticated = function (req, res, next) {
@@ -17,12 +17,12 @@ const verifyOwner = function (req, res, next) {
       next()
   } else {
       getUserById(req).exec((error, user) => {
-          if (error) {
+          if (error || !user) {
               req.error = {
                   message: 'User not found',
                   status: 404
               }
-              next()
+              return next()
           }
           if (user && req.user.username !== user.username) {
               req.error = {
@@ -61,20 +61,6 @@ const getUser = function(req,res) {
       });
 };
 
-//add a user
-const makeUser = function(req,res){
-    //save user instance from adUser
-    addUser(req).save((error, user) => {
-        if (error) {
-          res.status(500);
-          return res.json({
-            error: error.message
-          });
-        }
-        res.status(201);
-        res.send(user);
-      });
-};
 
 //remove user
 const removeUser = function(req,res) {
@@ -84,7 +70,7 @@ const removeUser = function(req,res) {
       res.send(req.error.message)
   }else{
     // execute the query from deleteUser
-    deleteUser(req.params.id).exec((error) => {
+    deleteUser(req).exec((error) => {
         if (error) {
         res.status(500);
         return res.json({
@@ -118,4 +104,4 @@ if (req.error) {
   }
 };
 
-module.exports = {getUsers, getUser, makeUser, removeUser, changeUser, userAuthenticated, verifyOwner}
+module.exports = {getUsers, getUser, removeUser, changeUser, userAuthenticated, verifyOwner}
