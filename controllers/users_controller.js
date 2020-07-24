@@ -12,7 +12,6 @@ const userAuthenticated = function (req, res, next) {
 //verify owner
 const verifyOwner = function (req, res, next) {
   // If post owner isn't currently logged in user, send forbidden
-
   if (req.user.role === 'admin') {
       next()
   } else {

@@ -3,7 +3,6 @@ const mongoose = require("mongoose")
 const utilities = require('../utils/users_utils');
 const User = require("../models/user")
 
-
 const dbConn = "mongodb://localhost/SynchIT_test"
 let userId = null
 
@@ -53,7 +52,6 @@ function setUpData() {
     return User.create(testUser)
 };
 
-
 // deleting test data after tests
 afterEach(done => {
     tearDownData().exec(() => done())
@@ -84,7 +82,6 @@ describe("getAllUsers", () => {
          });
     });
 });
-
 
 // get user by id
 describe("getUserById", () => {

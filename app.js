@@ -20,12 +20,10 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(cookieParser());
 
-
 //
 if(process.env.NODE_ENV !== 'production') {
      require('dotenv').config();
 }
-
 
 //database connection
 const dbConn = process.env.MONGODB_URI ||"mongodb://localhost/SynchIT"

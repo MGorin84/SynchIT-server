@@ -2,7 +2,6 @@ const User = require("../models/user")
 const path = require("path")
 const fs = require("fs")
 
-
 // returns all users
 const getAllUsers = function (req) {
     return User.find()
@@ -12,7 +11,6 @@ const getAllUsers = function (req) {
 const getUserById = function (req) {
     return User.findById(req.params.id)
   }
-
 
 //delete user
 const deleteUser = function(req) {
@@ -24,6 +22,5 @@ const updateUser = function(req) {
         new: true
       });
 }
-
 
 module.exports = {getAllUsers, getUserById, deleteUser, updateUser}
