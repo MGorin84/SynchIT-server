@@ -56,7 +56,9 @@ const getUser = function(req,res) {
           res.status(404);
           return res.send("User not found");
         }
-        res.send(user);
+        res.send({
+        username: user.username,
+        availability: user.availability});
       });
 };
 

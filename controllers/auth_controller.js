@@ -41,4 +41,13 @@ const logout = function(req, res) {
 	res.sendStatus(200)
 }
 
-module.exports = { register, login: loginUser, logout }
+const authenticatedUser = function(req, res) {
+    if(req.user) {
+        res.status(200)
+        res.send(req.user)
+    }else{
+        res.sendStatus(403)
+    }
+}
+
+module.exports = { register, login: loginUser, logout, authenticatedUser }
