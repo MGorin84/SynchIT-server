@@ -19,10 +19,7 @@ const User = new Schema ({
     role:{
         type: String
     },
-    availability: [{
-        day: String,
-        time_of_day: String
-    }]
+    availability: [Date]
 })
 
 // plugin the passport-local-mongoose middleware with our User schema

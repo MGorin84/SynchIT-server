@@ -1,0 +1,28 @@
+24-07-20
+START-------------------------
+
+> express_server@1.0.0 test /home/maria/coder-academy/term3/assignments/SynchIT/SynchIT-server
+> mocha
+
+
+
+Connected to the database
+  getAllUsers
+    ✓ should get all users
+    ✓ should get a user with a username Tester
+
+  getUserById
+    ✓ username of first user should be Tester
+
+  deleteUser
+    ✓ should delete the user by id
+
+  updateUser
+    ✓ should update a user
+
+
+  5 passing (146ms)
+
+END-------------------------
+
+
