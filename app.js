@@ -40,7 +40,7 @@ mongoose.connect(
         if (error) {
             console.log("Error connecting to a database", error)
         }else{
-            console.log("Connected to the database SynchIT")
+            console.log("Connected to the database SynchIT",dbConn)
         }
     }
 )

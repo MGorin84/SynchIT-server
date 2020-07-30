@@ -48,7 +48,6 @@ function setUpData() {
     testUser.username = "Tester"
     testUser.email = "tester@test.com"
     testUser.position = "Testing manager"
-    testUser.availability = [{"day":"Monday", "time_of_day":"afternoon"}];
     return User.create(testUser)
 };
 
@@ -124,8 +123,7 @@ describe("updateUser", () => {
             body: {
                 username: "Tester 2",
                 email: "tester@test.com",
-                position: "tester",
-                availability: [{"day":"Tuesday", "time_of_day": "evening"}]
+                position: "tester"
             }
         };
         await utilities.updateUser(req).exec((error, user) => {
