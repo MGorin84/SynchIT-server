@@ -57,6 +57,7 @@ const getUser = function(req,res) {
           return res.send("User not found");
         }
         res.send({
+        _id: user._id,
         username: user.username,
         availability: user.availability});
       });
@@ -91,6 +92,7 @@ if (req.error) {
     res.status(req.error.status)
     res.send(req.error.message)
 } else {
+    console.log(req.body)
     // execute the query from updateUser
     updateUser(req).exec((error, user) => {
       if (error) {
