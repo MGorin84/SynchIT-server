@@ -16,7 +16,12 @@ const port = process.env.PORT || 3030;
 // create server
 const app = express();
 // call the middleware
-app.use(cors());
+app.use(cors({
+    credentials: true,
+    origin: (origin, cb)=>{
+        cb(null, true)
+    }
+}));
 app.use(bodyParser.json());
 app.use(cookieParser());
 
@@ -44,13 +49,17 @@ mongoose.connect(
         }
     }
 )
-
+app.enable("trust proxy")
 app.use(session({
     //resave and saveUninitialized set to false for deprecation warnings
+    proxy: true,
     secret: "Express is awesome",
     resave: false,
     saveUninitialized: false,
     cookie: {
+        // secure: true,
+        // sameSite: "none",
+        // httpOnly: false,
         maxAge: 1800000
    },
     store: new MongoStore({

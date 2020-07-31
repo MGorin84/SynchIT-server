@@ -5,6 +5,7 @@ const register = function (req, res) {
     User.register(new User({
         username: req.body.username,
         email: req.body.email,
+        position: req.body.position,
         role: req.body.role || "user"
 
     }), req.body.password, function (err) {
@@ -46,7 +47,7 @@ const authenticatedUser = function(req, res) {
         res.status(200)
         res.send(req.user)
     }else{
-        res.sendStatus(403)
+        res.sendStatus(204)
     }
 }
 
